@@ -17,12 +17,14 @@ void MonsterSensorSystem::update(const double duration_ms) {
         Position_c *targetPosition;
         float distance = -1;
         rltk::each<Player_c, Position_c>(
-                [&targetPosition, &distance](rltk::entity_t &entity, Player_c &player,
-                                             Position_c &pos) {
-                    float d = std::sqrt(pos.x * pos.x + pos.y * pos.y);
+                [&pos,&targetPosition, &distance](rltk::entity_t &entity, Player_c &player,
+                                             Position_c &playerPos) {
+                    float x = playerPos.x - pos.x;
+                    float y = playerPos.y - pos.y;
+                    float d = std::sqrt(x * x + y * y);
                     if (distance == -1 || d < distance) {
                         distance = d;
-                        targetPosition = &pos;
+                        targetPosition = &playerPos;
                     }
                 });
 

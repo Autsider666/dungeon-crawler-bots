@@ -22,6 +22,8 @@ struct Monster_c {
     std::vector<std::string> mutations;
 
     Monster_c reproduce();
+
+    Monster_c crossover(const Monster_c &other);
 };
 
 

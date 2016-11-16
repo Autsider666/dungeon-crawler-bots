@@ -54,14 +54,32 @@ Brain_c Brain_c::reproduce() {
             if (rng::getRandomFloatBetween(0, 1) < settings::mutationRate) {
                 neurons[i].connectedNeuronWeight[j] += rng::getRandomMutation(settings::mutationStrength);
             }
-            if (rng::getRandomFloatBetween(0, 1) < settings::mutationRate / 10) {
-                neurons[i].connectedNeuronId[j] = rng::getRandomIntBetween(0, settings::BrainSize - 1);
-            }
             if (rng::getRandomFloatBetween(0, 1) < settings::mutationRate / 5) {
                 neurons[i].connectedNeuronId[j] = rng::getRandomIntBetween(0, settings::BrainSize - 1);
             }
         }
     }
-
     return babyBrain;
+}
+
+Brain_c Brain_c::crossover(const Brain_c &other) {
+    Brain_c babyBrain;
+
+    for (int i = 0; i < settings::BrainSize; ++i) {
+        if (rng::getRandomFloatBetween(0, 1) < 0.5) {
+            babyBrain.neurons[i].bias = this->neurons[1].bias;
+            for (int j = 0; j < babyBrain.neurons[i].connectedNeuronId.size(); ++j) {
+                babyBrain.neurons[i].connectedNeuronId[j] = this->neurons[i].connectedNeuronId[j];
+                babyBrain.neurons[i].connectedNeuronWeight[j] = this->neurons[i].connectedNeuronWeight[j];
+            }
+        } else {
+            babyBrain.neurons[i].bias = other.neurons[1].bias;
+            for (int j = 0; j < babyBrain.neurons[i].connectedNeuronId.size(); ++j) {
+                babyBrain.neurons[i].connectedNeuronId[j] = other.neurons[i].connectedNeuronId[j];
+                babyBrain.neurons[i].connectedNeuronWeight[j] = other.neurons[i].connectedNeuronWeight[j];
+            }
+        }
+    }
+    return babyBrain;
+
 }

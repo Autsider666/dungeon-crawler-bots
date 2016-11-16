@@ -18,6 +18,8 @@ struct Brain_c {
     void tick(std::vector<float> &input);
 
     Brain_c reproduce();
+
+    Brain_c crossover(const Brain_c & other);
 };
 
 
