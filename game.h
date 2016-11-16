@@ -20,13 +20,8 @@ class Game {
     bool fullscreen;
     World *world;
 
-    size_t targetId;
-    bool found;
-
 public:
     static Game *getInstance();
-
-    size_t getTargetId() { return targetId; };
 
     int getWindowHeight() const {
         return windowHeight;
@@ -63,14 +58,6 @@ public:
     void setWorld(World *world) {
         Game::world = world;
     }
-
-    void targetFound() { found = true; };
-
-    bool isTargetFound() { return found; }
-
-    void setNewTarget();
-
-    void removeEntity(size_t id);
 };
 
 

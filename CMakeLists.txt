@@ -30,7 +30,7 @@ find_package(SFML 2 COMPONENTS system window graphics REQUIRED)
 include_directories(${SFML_INCLUDE_DIR})
 
 # Add all of the example executables and their library dependency
-set(SOURCE_FILES main.cpp components/Position_c.cpp components/Position_c.h components/Renderable_c.cpp components/Renderable_c.h utility/navigator_helper.cpp utility/navigator_helper.h Game.cpp Game.h World.cpp World.h rng.cpp rng.h components/Brain_c.cpp components/Brain_c.h components/Neuron_c.cpp components/Neuron_c.h settings.h systems/BrainSystem.cpp systems/BrainSystem.h components/Agent_c.cpp components/Agent_c.h)
+set(SOURCE_FILES main.cpp components/Position_c.cpp components/Position_c.h components/Renderable_c.cpp components/Renderable_c.h utility/navigator_helper.cpp utility/navigator_helper.h Game.cpp Game.h World.cpp World.h rng.cpp rng.h components/Brain_c.cpp components/Brain_c.h components/Neuron_c.cpp components/Neuron_c.h settings.h systems/MonsterSensorSystem.cpp systems/MonsterSensorSystem.h components/Monster_c.cpp components/Monster_c.h systems/WorldRenderSystem.cpp systems/WorldRenderSystem.h systems/EntityRenderSystem.cpp systems/EntityRenderSystem.h systems/MonsterSystem.cpp systems/MonsterSystem.h messages/PlayerAttackedMessage.h systems/PlayerSystem.cpp systems/PlayerSystem.h components/Player_c.cpp components/Player_c.h systems/InputSystem.cpp systems/InputSystem.h)
 add_executable(DungeonCrawlerBots ${SOURCE_FILES} ${RLTK})
 target_link_libraries(DungeonCrawlerBots ${SFML_LIBRARIES})
 

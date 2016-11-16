@@ -8,7 +8,7 @@
 
 #include "../external/rltk/rltk/ecs.hpp"
 
-struct BrainSystem : public rltk::base_system{
+struct MonsterSensorSystem : public rltk::base_system{
     void configure ();
     void update(const double duration_ms);
 };

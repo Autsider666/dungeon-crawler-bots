@@ -12,14 +12,14 @@
 struct Renderable_c {
     Renderable_c() { }
 
-    Renderable_c(const char Glyph, const rltk::color_t foreground) : glyph(Glyph), fg(foreground) { }
+    Renderable_c(const char glyph, const rltk::color_t foreground, const int angle = 0) : glyph(glyph), fg(foreground),
+                                                                                          angle(angle) { }
 
     int glyph;
     rltk::color_t fg = rltk::colors::WHITE;
     rltk::color_t bg = rltk::colors::BLACK;
 
-    // Boilerplate required for the ECS
-    std::size_t serialization_identity = 2;
+    int angle;
 };
 
 

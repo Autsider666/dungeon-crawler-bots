@@ -8,8 +8,8 @@
 #include <vector>
 #include <string>
 
-struct Agent_c {
-    Agent_c();
+struct Monster_c {
+    Monster_c();
 
     int fitness;
     float health;
@@ -21,7 +21,7 @@ struct Agent_c {
 
     std::vector<std::string> mutations;
 
-    Agent_c reproduce();
+    Monster_c reproduce();
 };
 
 

@@ -32,7 +32,7 @@ void Brain_c::tick(std::vector<float> &input) {
                 int idx = currentNeuron->connectedNeuronId[j];
                 activationValue += neurons[idx].output * currentNeuron->connectedNeuronWeight[j];
             }
-            currentNeuron->output = 1.0 / (1.0 + exp(-activationValue));;
+            currentNeuron->output = 1.0 / (1.0 + exp(-activationValue));
         }
     }
 
@@ -48,11 +48,11 @@ Brain_c Brain_c::reproduce() {
 
     for (int i = 0; i < settings::BrainSize; ++i) {
         if (rng::getRandomFloatBetween(0, 1) < settings::mutationRate) {
-            neurons[i].bias += rng::getRandomMutation(settings::mutatuionStrength);
+            neurons[i].bias += rng::getRandomMutation(settings::mutationStrength);
         }
         for (int j = 0; j < neurons[i].connectedNeuronId.size(); ++j) {
             if (rng::getRandomFloatBetween(0, 1) < settings::mutationRate) {
-                neurons[i].connectedNeuronWeight[j] += rng::getRandomMutation(settings::mutatuionStrength);
+                neurons[i].connectedNeuronWeight[j] += rng::getRandomMutation(settings::mutationStrength);
             }
             if (rng::getRandomFloatBetween(0, 1) < settings::mutationRate / 10) {
                 neurons[i].connectedNeuronId[j] = rng::getRandomIntBetween(0, settings::BrainSize - 1);
