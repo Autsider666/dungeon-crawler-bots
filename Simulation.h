@@ -6,29 +6,31 @@
 #define SOLOMON_GAME_H
 
 #include <string>
-#include "World.h"
 #include "external/rltk/rltk/ecs.hpp"
+#include "World.h"
 
-class Game {
-    Game();
+class Simulation {
+    Simulation();
 
-    static Game *instance;
+    static Simulation *instance;
 
     int windowHeight;
     int windowWidth;
     std::string gameFont;
     bool fullscreen;
-    World *world;
+    World *currentWorld;
+
+    int renderMode;
 
 public:
-    static Game *getInstance();
+    static Simulation *getInstance();
 
     int getWindowHeight() const {
         return windowHeight;
     }
 
     void setWindowHeight(int windowHeight) {
-        Game::windowHeight = windowHeight;
+        Simulation::windowHeight = windowHeight;
     }
 
     int getWindowWidth() const {
@@ -36,7 +38,7 @@ public:
     }
 
     void setWindowWidth(int windowWidth) {
-        Game::windowWidth = windowWidth;
+        Simulation::windowWidth = windowWidth;
     }
 
     const std::string &getGameFont() const {
@@ -52,11 +54,17 @@ public:
     }
 
     World *getWorld() const {
-        return world;
+        return currentWorld;
     }
 
     void setWorld(World *world) {
-        Game::world = world;
+        Simulation::currentWorld = world;
+    }
+
+    int getRenderMode() const { return renderMode; };
+
+    void setRenderMode(int mode) {
+        Simulation::renderMode = mode;
     }
 };
 

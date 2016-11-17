@@ -8,7 +8,6 @@
 
 #include <stdint.h>
 #include <sstream>
-#include "../Game.h"
 
 struct Position_c {
     Position_c() { }
@@ -23,14 +22,6 @@ struct Position_c {
 
     bool operator!=(const Position_c &other) const {
         return (x != other.x || y != other.y);
-    }
-
-    void bounds_check() {
-        World *map = Game::getInstance()->getWorld();
-        if (x < 0) x = 0;
-        if (x > map->getWidth()) x = map->getWidth();
-        if (y < 0) y = 0;
-        if (y > map->getHeight()) y = map->getHeight();
     }
 };
 

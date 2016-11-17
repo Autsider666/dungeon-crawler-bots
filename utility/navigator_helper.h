@@ -9,7 +9,8 @@
 #include <vector>
 #include "../external/rltk/rltk/geometry.hpp"
 #include "../components/Position_c.h"
-#include "../Game.h"
+#include "../World.h"
+#include "../Simulation.h"
 
 struct navigator_helper {
     // This lets you define a distance heuristic. Manhattan distance works really well, but
@@ -35,7 +36,7 @@ struct navigator_helper {
     static bool get_successors(Position_c pos, std::vector<Position_c> &successors) {
         //std::cout << pos.x << "/" << pos.y << "\n";
 
-        World *map = Game::getInstance()->getWorld();
+        World *map = Simulation::getInstance()->getWorld();
 
         if (map->isReachable(static_cast<int>(pos.x - 1), static_cast<int>(pos.y - 1)))
             successors.push_back(Position_c(static_cast<int>(pos.x - 1), static_cast<int>(pos.y - 1)));
@@ -82,7 +83,7 @@ struct navigator_helper {
     static Position_c get_xy(const float &x, const float &y) { return Position_c{x, y}; }
 
     static bool is_walkable(const Position_c &loc) {
-        return Game::getInstance()->getWorld()->isReachable(static_cast<int>(loc.x), static_cast<int>(loc.y));
+        return Simulation::getInstance()->getWorld()->isReachable(static_cast<int>(loc.x), static_cast<int>(loc.y));
     }
 };
 

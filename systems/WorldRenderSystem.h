@@ -11,8 +11,6 @@
 struct WorldRenderSystem : public rltk::base_system{
     void configure ();
     void update(const double duration_ms);
-
-    bool rendered = false;
 };
 
 

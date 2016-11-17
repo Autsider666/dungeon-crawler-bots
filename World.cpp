@@ -6,15 +6,18 @@
 #include "rng.h"
 #include "settings.h"
 
-World::World() : height(settings::SimulationHeight), width(settings::SimulationWidth) {
+World::World() : height(Settings::SimulationHeight), width(Settings::SimulationWidth) {
     tiles.resize(getSize());
-    visible.resize(getSize());
-    revealed.resize(getSize());
+    walls.resize(getSize());
+    MonsterSound.resize(getSize());
+    PlayerSound.resize(getSize());
 
     std::fill(tiles.begin(), tiles.end(), 0);
-    std::fill(visible.begin(), visible.end(), false);
-    std::fill(revealed.begin(), revealed.end(), false);
+    std::fill(walls.begin(), walls.end(), -1);
+    std::fill(MonsterSound.begin(), MonsterSound.end(), -1);
+    std::fill(PlayerSound.begin(), PlayerSound.end(), -1);
 
+//    MAPGEN
 //    for (int i = 0; i < width; ++i) {
 //        tiles[at(i, 0)] = 1;
 //        tiles[at(i, height - 1)] = 1;
@@ -33,14 +36,4 @@ World::World() : height(settings::SimulationHeight), width(settings::SimulationW
 //            }
 //        }
 //    }
-}
-
-void World::resetVisible() {
-    std::fill(visible.begin(), visible.end(), 0);
-}
-
-void World::increaseVisibilityAt(const int x, const int y) {
-    if (visible[at(x,y)] < 8) {
-        ++visible[at(x,y)];
-    }
 }

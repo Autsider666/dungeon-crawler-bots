@@ -30,6 +30,14 @@ signed int rng::roleDice(int size, int amount) {
     return result;
 }
 
+signed int rng::getRandomIntBetween(float min, float max) {
+    if (min < max) {
+        uniform_int_distribution<> dis(min, max);
+        return dis(getInstance()->_gen);
+    }
+    return 0;
+}
+
 signed int rng::getRandomIntBetween(int min, int max) {
     if (min < max) {
         uniform_int_distribution<> dis(min, max);
@@ -55,7 +63,7 @@ float rng::getRandomFloatBetween(int min, int max) {
 }
 
 float rng::getRandomMutation(float chance) {
-    float val = getRandomFloatBetween(0,1) * chance * 2 - chance;
+    float val = getRandomFloatBetween(0, 1) * chance * 2 - chance;
 
     return val;
 }

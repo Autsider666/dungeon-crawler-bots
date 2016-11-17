@@ -8,14 +8,16 @@
 
 #include <vector>
 #include <stdint.h>
+#include "components/Position_c.h"
 
 class World {
     int height;
     int width;
 
     std::vector<int> tiles;
-    std::vector<uint8_t> visible;
-    std::vector<bool> revealed;
+    std::vector<int> walls;
+    std::vector<int> MonsterSound;
+    std::vector<int> PlayerSound;
 
 public:
     World();
@@ -34,21 +36,23 @@ public:
 
     int at(const int x, const int y) { return (y * width) + x; }
 
-    bool isRevealedAt(const int x, const int y) { return revealed[at(x, y)]; }
-
     bool isWalkableAt(const int x, const int y) { return (tiles[at(x, y)] == 0); }
 
     bool isReachable(const int x, const int y) { return (tiles[at(x, y)] <= 0); }
 
-    uint8_t getVisibilityAt(const int x, const int y) { return visible[at(x, y)]; }
-
     int getTileAt(const int x, const int y) { return tiles[at(x, y)]; }
 
-    void resetVisible();
+    int getMonsterSoundAt(const int x, const int y) { return MonsterSound[at(x, y)]; }
 
-    void increaseVisibilityAt(const int x, const int y);
+    void setMonsterSoundAt(const int x, const int y, const int value) { MonsterSound[at(x, y)] = value; }
 
-    void revealTileAt(const int x, const int y) { revealed[at(x, y)] = true; }
+    void resetMonsterSoundMap() { std::fill(MonsterSound.begin(), MonsterSound.end(), 0); }
+
+    int getPlayerSoundAt(const int x, const int y) { return PlayerSound[at(x, y)]; }
+
+    void setPlayerSoundAt(const int x, const int y, const int value) { PlayerSound[at(x, y)] = value; }
+
+    void resetPlayerSoundMap() { std::fill(PlayerSound.begin(), PlayerSound.end(), 0); }
 };
 
 

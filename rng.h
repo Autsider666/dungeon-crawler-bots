@@ -21,6 +21,8 @@ public:
 
     static signed int roleDice(int size, int amount = 1);
 
+    static signed int getRandomIntBetween(float min, float max);
+
     static signed int getRandomIntBetween(int min, int max);
 
     static float getRandomFloatBetween(float min, float max);

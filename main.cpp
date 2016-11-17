@@ -2,7 +2,7 @@
 #include <iomanip>
 #include "external/rltk/rltk/rltk.hpp"
 #include "World.h"
-#include "Game.h"
+#include "Simulation.h"
 #include "systems/WorldRenderSystem.h"
 #include "systems/EntityRenderSystem.h"
 #include "systems/PlayerSystem.h"
@@ -22,7 +22,7 @@ void tick(double duration_ms) {
     term(0)->box(DARKEST_GREEN, BLACK);
 //    term(0)->print(1, 1, "Agents: " + std::to_string(amountBots), LIGHT_GREEN, DARKEST_GREEN);
 //
-//    auto targetPos = entity(Game::getInstance()->getTargetId())->component<Position_c>();
+//    auto targetPos = entity(Simulation::getInstance()->getTargetId())->component<Position_c>();
 //
 //    term(0)->print(1, 2, "Target: " + std::to_string((int) round(targetPos->x)) + "/" +
 //                         std::to_string((int) round(targetPos->y)),
@@ -65,9 +65,9 @@ void resize_log(layer_t *l, int w, int h) {
 
 int main() {
     World *world = new World();
-    Game::getInstance()->setWorld(world);
+    Simulation::getInstance()->setWorld(world);
 
-    init(config_advanced("assets/fonts"));
+    init(config_advanced("assets/fonts",1024,768,"SkynetRL"));
 
     gui->add_layer(0, 864, 0, 160, 768, "8x16", resize_log);
     gui->add_layer(1, 0, 0, 1024 - 160, 768, "16x16", resize_main);

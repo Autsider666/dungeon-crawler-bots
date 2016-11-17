@@ -10,12 +10,12 @@
 #include "../rng.h"
 
 Brain_c::Brain_c() {
-    for (int i = 0; i < settings::BrainSize; ++i) {
+    for (int i = 0; i < Settings::BrainSize; ++i) {
         Neuron_c n;
         neurons.push_back(n);
     }
 
-    output.resize(settings::OutputNeurons, 0);
+    output.resize(Settings::OutputNeurons, 0);
 }
 
 void Brain_c::tick(std::vector<float> &input) {
@@ -23,7 +23,7 @@ void Brain_c::tick(std::vector<float> &input) {
     for (int i = 0; i < neurons.size(); ++i) {
         Neuron_c *currentNeuron = &neurons[i];
 
-        if (i < settings::InputNeurons) {
+        if (i < Settings::InputNeurons) {
             currentNeuron->output = input[i];
         } else {
             float activationValue = currentNeuron->bias;
@@ -36,7 +36,7 @@ void Brain_c::tick(std::vector<float> &input) {
         }
     }
 
-    for (int k = 0; k < settings::OutputNeurons; ++k) {
+    for (int k = 0; k < Settings::OutputNeurons; ++k) {
         output[k] = neurons[neurons.size() - 1 - k].output;
     }
 }
@@ -46,16 +46,16 @@ Brain_c Brain_c::reproduce() {
 
     babyBrain.neurons = neurons;
 
-    for (int i = 0; i < settings::BrainSize; ++i) {
-        if (rng::getRandomFloatBetween(0, 1) < settings::mutationRate) {
-            neurons[i].bias += rng::getRandomMutation(settings::mutationStrength);
+    for (int i = 0; i < Settings::BrainSize; ++i) {
+        if (rng::getRandomFloatBetween(0, 1) < Settings::mutationRate) {
+            neurons[i].bias += rng::getRandomMutation(Settings::mutationStrength);
         }
         for (int j = 0; j < neurons[i].connectedNeuronId.size(); ++j) {
-            if (rng::getRandomFloatBetween(0, 1) < settings::mutationRate) {
-                neurons[i].connectedNeuronWeight[j] += rng::getRandomMutation(settings::mutationStrength);
+            if (rng::getRandomFloatBetween(0, 1) < Settings::mutationRate) {
+                neurons[i].connectedNeuronWeight[j] += rng::getRandomMutation(Settings::mutationStrength);
             }
-            if (rng::getRandomFloatBetween(0, 1) < settings::mutationRate / 5) {
-                neurons[i].connectedNeuronId[j] = rng::getRandomIntBetween(0, settings::BrainSize - 1);
+            if (rng::getRandomFloatBetween(0, 1) < Settings::mutationRate / 5) {
+                neurons[i].connectedNeuronId[j] = rng::getRandomIntBetween(0, Settings::BrainSize - 1);
             }
         }
     }
@@ -65,7 +65,7 @@ Brain_c Brain_c::reproduce() {
 Brain_c Brain_c::crossover(const Brain_c &other) {
     Brain_c babyBrain;
 
-    for (int i = 0; i < settings::BrainSize; ++i) {
+    for (int i = 0; i < Settings::BrainSize; ++i) {
         if (rng::getRandomFloatBetween(0, 1) < 0.5) {
             babyBrain.neurons[i].bias = this->neurons[1].bias;
             for (int j = 0; j < babyBrain.neurons[i].connectedNeuronId.size(); ++j) {

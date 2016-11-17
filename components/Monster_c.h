@@ -11,13 +11,12 @@
 struct Monster_c {
     Monster_c();
 
-    int fitness;
     float health;
     int age;
 
     int generation;
 
-    float clock1, clock2;
+    float clock1, clock2, speed;
 
     std::vector<std::string> mutations;
 
