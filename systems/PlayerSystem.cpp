@@ -34,28 +34,31 @@ void PlayerSystem::update(const double duration_ms) {
     int players = 0;
 
     World *w = Simulation::getInstance()->getWorld();
-    w->resetPlayerSoundMap();
+    w->resetHeatMap();
     rltk::each<Player_c, Position_c>([&w, &players](rltk::entity_t &entity, Player_c &player, Position_c &pos) {
         players++;
         for (int x = 0; x < Settings::SimulationWidth; ++x) {
             for (int y = 0; y < Settings::SimulationHeight; ++y) {
                 float dx = x - pos.x;
                 float dy = y - pos.y;
-                float strength = Settings::BasicSoundRange * 2 - std::sqrt(dx * dx + dy * dy);
-                if (strength > 0 && w->getPlayerSoundAt(x, y) < strength) {
-                    w->setPlayerSoundAt(x, y, strength);
+                float strength = Settings::BasicHeatRange - std::sqrt(dx * dx + dy * dy);
+                if (strength > 0 && w->getHeatAt(x, y) < strength && w->isWalkableAt(x, y)) {
+                    w->setHeatAt(x, y, strength);
                 }
             }
         }
     });
     if (players == 0) {
         while (players < Settings::MinimumPlayers) {
-            rltk::create_entity()
-                    ->assign(Player_c{})
-                    ->assign(Position_c{rng::getRandomFloatBetween(0, Settings::SimulationWidth - 1),
-                                        rng::getRandomFloatBetween(0, Settings::SimulationHeight - 1)})
-                    ->assign(Renderable_c{'@', rltk::colors::YELLOW});
-            players++;
+            float x = rng::getRandomFloatBetween(0, Settings::SimulationWidth - 1);
+            float y = rng::getRandomFloatBetween(0, Settings::SimulationHeight - 1);
+            if (w->isWalkableAt(round(x), round(y))) {
+                auto player = rltk::create_entity()
+                        ->assign(Player_c{})
+                        ->assign(Position_c{x, y})
+                        ->assign(Renderable_c{'@', rltk::colors::YELLOW});
+                players++;
+            }
         }
     }
 }

@@ -15,7 +15,7 @@ struct Brain_c {
     std::vector<Neuron_c> neurons;
     std::vector<float> output;
 
-    void tick(std::vector<float> &input);
+    void tick(std::vector<float> input);
 
     Brain_c reproduce();
 

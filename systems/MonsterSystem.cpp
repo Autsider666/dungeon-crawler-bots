@@ -18,29 +18,38 @@
 #include "../Simulation.h"
 
 void MonsterSystem::configure() {
-    system_name = "Agent System";
+    system_name = "Monster System";
 }
 
 void MonsterSystem::update(const double duration_ms) {
-    Simulation::getInstance()->getWorld()->resetMonsterSoundMap();
+    Simulation::getInstance()->getWorld()->resetSoundMap();
     int amountBots = 0;
     size_t ancientOne = 0;
     std::vector<size_t> luckyFew;
     int totalAge = 0;
+
+    std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+
     rltk::each<Monster_c, Brain_c, Position_c, Renderable_c>(
-            [&amountBots, &luckyFew, &ancientOne, &totalAge](rltk::entity_t &e, Monster_c &monster, Brain_c &brain,
-                                                             Position_c &monsterpos, Renderable_c &render) { ;
+            [&t1, &amountBots, &luckyFew, &ancientOne, &totalAge](rltk::entity_t &e, Monster_c &monster, Brain_c &brain,
+                                                                  Position_c &monsterpos, Renderable_c &render) { ;
                 boost::optional<rltk::entity_t &> target;
                 float distance = -1;
                 rltk::each<Player_c, Position_c>(
-                        [&monsterpos, &target, &distance](rltk::entity_t &entity, Player_c &player,
-                                                          Position_c &playerPos) {
+                        [&monster, &luckyFew, &e, &monsterpos, &target, &distance](rltk::entity_t &entity,
+                                                                                   Player_c &player,
+                                                                                   Position_c &playerPos) {
                             float x = playerPos.x - monsterpos.x;
                             float y = playerPos.y - monsterpos.y;
                             float d = std::sqrt(x * x + y * y);
                             if (distance == -1 || d < distance) {
                                 distance = d;
                                 target = entity;
+                            }
+                            if (d < 1.5) {
+                                rltk::emit(PlayerAttackedMessage{e, entity});
+                                monster.health = 1;
+                                luckyFew.push_back(e.id);
                             }
                         });
 
@@ -77,8 +86,27 @@ void MonsterSystem::update(const double duration_ms) {
                     monster.speed = dd;
                 }
 
-                monsterpos.x += dx;
-                monsterpos.y += dy;
+                if (Simulation::getInstance()->getWorld()->isWalkableAt(round(monsterpos.x + dx),
+                                                                        round(monsterpos.y + dy))) {
+
+                    monsterpos.x += dx;
+                    monsterpos.y += dy;
+                } else {
+                    while (Simulation::getInstance()->getWorld()->isWalkableAt(round(monsterpos.x + dx),
+                                                                               round(monsterpos.y + dy))) {
+                        if (dx > 0) {
+                            dx -= 0.1;
+                        } else if (dx < 0) {
+                            dx += 0.1;
+                        }
+
+                        if (dy > 0) {
+                            dy -= 0.1;
+                        } else if (dy < 0) {
+                            dy += 0.1;
+                        }
+                    }
+                }
 
                 if (monsterpos.x < 0) {
                     monsterpos.x = 0;
@@ -100,19 +128,6 @@ void MonsterSystem::update(const double duration_ms) {
 
                 monster.health -= 0.005 * ((monster.age / 200) + 1);
 
-                rltk::each<Player_c, Position_c>(
-                        [&monsterpos, &e, &monster, &luckyFew](rltk::entity_t &entity, Player_c &player,
-                                                               Position_c &playerPos) {
-                            float x = playerPos.x - monsterpos.x;
-                            float y = playerPos.y - monsterpos.y;
-                            float d = std::sqrt(x * x + y * y);
-                            if (d < 1.5) {
-                                rltk::emit(PlayerAttackedMessage{e, entity});
-                                monster.health = 1;
-                                luckyFew.push_back(e.id);
-                            }
-                        });
-
                 if (monster.health <= 0) {
                     rltk::delete_entity(e);
                 } else {
@@ -123,8 +138,8 @@ void MonsterSystem::update(const double duration_ms) {
                             float dx = x - monsterpos.x;
                             float dy = y - monsterpos.y;
                             float strength = distanceMax - std::sqrt(dx * dx + dy * dy);
-                            if (strength > 0 && w->getMonsterSoundAt(x, y) < strength) {
-                                w->setMonsterSoundAt(x, y, strength);
+                            if (strength > 0 && w->getSoundAt(x, y) < strength && w->isWalkableAt(x, y)) {
+                                w->setSoundAt(x, y, strength);
                             }
                         }
                     }
@@ -132,31 +147,65 @@ void MonsterSystem::update(const double duration_ms) {
                 }
             });
 
+    std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+
+    std::cout << "-----------------" << std::endl << "After loop: " << duration << std::endl;
+
+    if (amountBots > 0) {
+        std::cout << "Avg time / monster: " << duration / amountBots << std::endl;
+    }
+
     for (size_t id : luckyFew) {
         for (int k = 0; k < Settings::Babies; ++k) {
             if (amountBots < Settings::MaximumMonsters) {
                 auto parent = rltk::entity(id);
+                float x = parent->component<Position_c>()->x + rng::getRandomIntBetween(-5, 5);
+                float y = parent->component<Position_c>()->y + rng::getRandomIntBetween(-5, 5);
+                if (Simulation::getInstance()->getWorld()->isWalkableAt(round(x), round(y))) {
+                    rltk::create_entity()
+                            ->assign(parent->component<Monster_c>()->reproduce())
+                            ->assign(parent->component<Brain_c>()->reproduce())
+                            ->assign(Position_c{x, y})
+                            ->assign(Renderable_c{'W', rltk::colors::WHITE});
+                    amountBots++;
+                }
+            }
+        }
+    }
+
+
+    std::chrono::high_resolution_clock::time_point t3 = std::chrono::high_resolution_clock::now();
+
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(t3 - t2).count();
+
+    std::cout << "After Kids: " << duration << std::endl;
+
+    if (amountBots == 0) {
+        while (amountBots < Settings::MinimumMonsters) {
+            float x = rng::getRandomFloatBetween(0, Settings::SimulationWidth - 1);
+            float y = rng::getRandomFloatBetween(0, Settings::SimulationHeight - 1);
+            if (Simulation::getInstance()->getWorld()->isWalkableAt(round(x), round(y))) {
                 rltk::create_entity()
-                        ->assign(parent->component<Monster_c>()->reproduce())
-                        ->assign(parent->component<Brain_c>()->reproduce())
-                        ->assign(Position_c{parent->component<Position_c>()->x + rng::getRandomIntBetween(-5, 5),
-                                            parent->component<Position_c>()->y + rng::getRandomIntBetween(-5, 5)})
+                        ->assign(Monster_c{})
+                        ->assign(Brain_c{})
+                        ->assign(Position_c{x, y})
                         ->assign(Renderable_c{'W', rltk::colors::WHITE});
                 amountBots++;
             }
         }
     }
 
-    if (amountBots == 0) {
-        while (amountBots < Settings::MinimumMonsters) {
-            rltk::create_entity()
-                    ->assign(Monster_c{})
-                    ->assign(Brain_c{})
-//                    ->assign(Position_c{rng::getRandomFloatBetween(0, Settings::SimulationWidth - 1),
-//                                        rng::getRandomFloatBetween(0, Settings::SimulationHeight - 1)})
-                    ->assign(Position_c{Settings::SimulationWidth / 2, Settings::SimulationHeight / 2})
-                    ->assign(Renderable_c{'W', rltk::colors::WHITE});
-            amountBots++;
-        }
-    }
+    std::chrono::high_resolution_clock::time_point t4 = std::chrono::high_resolution_clock::now();
+
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(t4 - t3).count();
+
+    std::cout << "After reset:" << duration << std::endl;
+
+
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(t4 - t1).count();
+
+    std::cout << "Total Time:" << duration << std::endl;
+    std::cout << "Amount Monsters: " << amountBots << std::endl;
 }

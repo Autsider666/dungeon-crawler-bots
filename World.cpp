@@ -9,13 +9,13 @@
 World::World() : height(Settings::SimulationHeight), width(Settings::SimulationWidth) {
     tiles.resize(getSize());
     walls.resize(getSize());
-    MonsterSound.resize(getSize());
-    PlayerSound.resize(getSize());
+    sound.resize(getSize());
+    heat.resize(getSize());
 
     std::fill(tiles.begin(), tiles.end(), 0);
     std::fill(walls.begin(), walls.end(), -1);
-    std::fill(MonsterSound.begin(), MonsterSound.end(), -1);
-    std::fill(PlayerSound.begin(), PlayerSound.end(), -1);
+    std::fill(sound.begin(), sound.end(), 0);
+    std::fill(heat.begin(), heat.end(), 0);
 
 //    MAPGEN
 //    for (int i = 0; i < width; ++i) {
@@ -26,14 +26,35 @@ World::World() : height(Settings::SimulationHeight), width(Settings::SimulationW
 //        tiles[at(0, i)] = 1;
 //        tiles[at(width - 1, i)] = 1;
 //    }
-//    // Random debris
-//    for (int y = 1; y < height - 1; ++y) {
-//        for (int x = 1; x < width - 1; ++x) {
-//            if (rng::getRandomIntBetween(1,5) == 1 && (x != width / 2 || y != height / 2)){
-//                tiles[at(x, y)] = 1;
-//            } else if (rng::getRandomIntBetween(1,25) == 1 && (x != width / 2 || y != height / 2)){
-//                tiles[at(x, y)] = -1;
-//            }
-//        }
-//    }
+    // Random debris
+    for (int y = 1; y < height; ++y) {
+        for (int x = 1; x < width; ++x) {
+            if (rng::getRandomIntBetween(1,10) == 1){
+                tiles[at(x, y)] = 1;
+            }
+        }
+    }
+}
+
+int World::at(const int x, const int y) {
+    if (y < 0 || y >= height || x < 0 || x > width) {
+        return -1;
+    }
+    return (y * width) + x;
+}
+
+int World::getHeatAt(const int x, const int y) {
+    int i = at(x,y);
+    if (i < 0) {
+        return 0;
+    }
+    return heat[i];
+}
+
+int World::getSoundAt(const int x, const int y) {
+    int i = at(x,y);
+    if (i < 0) {
+        return 0;
+    }
+    return sound[i];
 }

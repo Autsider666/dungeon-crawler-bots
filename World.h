@@ -16,9 +16,8 @@ class World {
 
     std::vector<int> tiles;
     std::vector<int> walls;
-    std::vector<int> MonsterSound;
-    std::vector<int> PlayerSound;
-
+    std::vector<int> sound;
+    std::vector<int> heat;
 public:
     World();
 
@@ -34,7 +33,7 @@ public:
         return height * width;
     }
 
-    int at(const int x, const int y) { return (y * width) + x; }
+    int at(const int x, const int y);
 
     bool isWalkableAt(const int x, const int y) { return (tiles[at(x, y)] == 0); }
 
@@ -42,17 +41,17 @@ public:
 
     int getTileAt(const int x, const int y) { return tiles[at(x, y)]; }
 
-    int getMonsterSoundAt(const int x, const int y) { return MonsterSound[at(x, y)]; }
+    int getSoundAt(const int x, const int y);
 
-    void setMonsterSoundAt(const int x, const int y, const int value) { MonsterSound[at(x, y)] = value; }
+    void setSoundAt(const int x, const int y, const int value) { sound[at(x, y)] = value; }
 
-    void resetMonsterSoundMap() { std::fill(MonsterSound.begin(), MonsterSound.end(), 0); }
+    void resetSoundMap() { std::fill(sound.begin(), sound.end(), 0); }
 
-    int getPlayerSoundAt(const int x, const int y) { return PlayerSound[at(x, y)]; }
+    int getHeatAt(const int x, const int y);
 
-    void setPlayerSoundAt(const int x, const int y, const int value) { PlayerSound[at(x, y)] = value; }
+    void setHeatAt(const int x, const int y, const int value) { heat[at(x, y)] = value; }
 
-    void resetPlayerSoundMap() { std::fill(PlayerSound.begin(), PlayerSound.end(), 0); }
+    void resetHeatMap() { std::fill(heat.begin(), heat.end(), 0); }
 };
 
 

@@ -18,7 +18,7 @@ Brain_c::Brain_c() {
     output.resize(Settings::OutputNeurons, 0);
 }
 
-void Brain_c::tick(std::vector<float> &input) {
+void Brain_c::tick(std::vector<float> input) {
 
     for (int i = 0; i < neurons.size(); ++i) {
         Neuron_c *currentNeuron = &neurons[i];
