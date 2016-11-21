@@ -21,6 +21,8 @@ class World {
 public:
     World();
 
+    std::vector<int> getNewMap();
+
     int getHeight() const {
         return height;
     }
@@ -34,6 +36,8 @@ public:
     }
 
     int at(const int x, const int y);
+
+    std::pair<int,int> at(int i);
 
     bool isWalkableAt(const int x, const int y) { return (tiles[at(x, y)] == 0); }
 

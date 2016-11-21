@@ -11,6 +11,10 @@
 #include "../components/Renderable_c.h"
 #include "../World.h"
 #include "../Simulation.h"
+#include "../utility/navigator_helper.h"
+#include "../external/rltk/rltk/visibility.hpp"
+#include "../external/rltk/rltk/path_finding.hpp"
+#include "../components/HeatSource_c.h"
 
 void PlayerSystem::configure() {
     system_name = "Player System";
@@ -25,40 +29,30 @@ void PlayerSystem::update(const double duration_ms) {
         messages->pop();
         if (std::find(deleted.begin(), deleted.end(), e.player->id) == deleted.end()) {
             deleted.push_back(e.player->id);
-            auto targetPosition = e.player->component<Position_c>();
-            targetPosition->x = rng::getRandomIntBetween(0, Settings::SimulationWidth - 1);
-            targetPosition->y = rng::getRandomIntBetween(0, Settings::SimulationHeight - 1);
         }
+    }
+
+    for (size_t id : deleted) {
+        rltk::delete_entity(id);
     }
 
     int players = 0;
 
-    World *w = Simulation::getInstance()->getWorld();
-    w->resetHeatMap();
-    rltk::each<Player_c, Position_c>([&w, &players](rltk::entity_t &entity, Player_c &player, Position_c &pos) {
+    rltk::each<Player_c, Position_c>([&players](rltk::entity_t &entity, Player_c &player, Position_c &pos) {
         players++;
-        for (int x = 0; x < Settings::SimulationWidth; ++x) {
-            for (int y = 0; y < Settings::SimulationHeight; ++y) {
-                float dx = x - pos.x;
-                float dy = y - pos.y;
-                float strength = Settings::BasicHeatRange - std::sqrt(dx * dx + dy * dy);
-                if (strength > 0 && w->getHeatAt(x, y) < strength && w->isWalkableAt(x, y)) {
-                    w->setHeatAt(x, y, strength);
-                }
-            }
-        }
     });
-    if (players == 0) {
-        while (players < Settings::MinimumPlayers) {
-            float x = rng::getRandomFloatBetween(0, Settings::SimulationWidth - 1);
-            float y = rng::getRandomFloatBetween(0, Settings::SimulationHeight - 1);
-            if (w->isWalkableAt(round(x), round(y))) {
-                auto player = rltk::create_entity()
-                        ->assign(Player_c{})
-                        ->assign(Position_c{x, y})
-                        ->assign(Renderable_c{'@', rltk::colors::YELLOW});
-                players++;
-            }
+
+    while (players < Settings::MinimumPlayers) {
+        int x = rng::getRandomIntBetween(0, Settings::SimulationWidth - 1);
+        int y = rng::getRandomIntBetween(0, Settings::SimulationHeight - 1);
+
+        if (Simulation::getInstance()->getWorld()->isWalkableAt(x, y)) {
+            rltk::create_entity()
+                    ->assign(Player_c{})
+                    ->assign(Position_c{x, y})
+                    ->assign(HeatSource_c{Settings::BasicHeatRange})
+                    ->assign(Renderable_c{'@', rltk::colors::YELLOW});
+            players++;
         }
     }
 }

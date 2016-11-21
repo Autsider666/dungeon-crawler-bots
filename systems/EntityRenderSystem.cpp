@@ -17,7 +17,6 @@ void EntityRenderSystem::configure() {
 void EntityRenderSystem::update(const double duration_ms) {
     sterm(2)->clear();
     rltk::each<Position_c, Renderable_c>([](rltk::entity_t &entity, Position_c &pos, Renderable_c &renderable) {
-        sterm(2)->add(xchar(renderable.glyph, renderable.fg, round(pos.x), round(pos.y),
-                            renderable.angle));
+        sterm(2)->add(xchar(renderable.glyph, renderable.fg, pos.x, pos.y, renderable.angle));
     });
 }

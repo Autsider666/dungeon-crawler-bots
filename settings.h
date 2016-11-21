@@ -10,10 +10,10 @@ namespace Settings {
     // 108;
     const unsigned SimulationHeight = 48; //96;
 
-    const unsigned MinimumMonsters = 10;
-    const unsigned MaximumMonsters = 50;
-    const float BasicSoundRange = 20;
-    const float BasicHeatRange = 40;
+    const unsigned MinimumMonsters = 5;
+    const unsigned MaximumMonsters = 20;
+    const unsigned BasicSoundRange = 60;
+    const unsigned BasicHeatRange = 90;
 
     const unsigned MinimumPlayers = 5;
 
@@ -24,11 +24,11 @@ namespace Settings {
     const float mutationRate = 0.002f;
     const float mutationStrength = 0.05f;
 
-    const unsigned StartingNeuronConnections = 8;
-    const unsigned InputNeurons = 11; //5;
-    const unsigned OutputNeurons = 5; //10;
+    const unsigned StartingNeuronConnections = 10;
+    const unsigned InputNeurons = 3; //5;
+    const unsigned OutputNeurons = 9; //10;
     const float SparceConnectionPercentage = 0.0;
-    const float DirectInputConnectChance = 0.5; //0.2;
+    const float DirectInputConnectChance = 0.3; //0.2;
     const float MinimumWeight = -3;
     const float MaximumWeight = 3;
     const float MinimumBias = -3;
@@ -37,8 +37,8 @@ namespace Settings {
 
 enum Vision {
     Basic,
-    MonsterSound,
-    PlayerSound
+    Sound,
+    Heat
 };
 
 #endif //DUNGEONCRAWLERBOTS_SETTINGS_H

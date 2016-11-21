@@ -4,8 +4,7 @@ project("DungeonCrawlerBots")
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/external/cmake_modules)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -mtune=native -g")
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -mtune=native -g")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -L/opt/local/lib -L/usr/lib/i386-linux-gnu")
 
 set(RLTK external/rltk/rltk/rltk.cpp
@@ -31,7 +30,7 @@ find_package(SFML 2 COMPONENTS system window graphics REQUIRED)
 include_directories(${SFML_INCLUDE_DIR})
 
 # Add all of the example executables and their library dependency
-set(SOURCE_FILES main.cpp components/Position_c.cpp components/Position_c.h components/Renderable_c.cpp components/Renderable_c.h utility/navigator_helper.cpp utility/navigator_helper.h Simulation.cpp Simulation.h World.cpp World.h rng.cpp rng.h components/Brain_c.cpp components/Brain_c.h components/Neuron_c.cpp components/Neuron_c.h settings.h systems/MonsterSensorSystem.cpp systems/MonsterSensorSystem.h components/Monster_c.cpp components/Monster_c.h systems/WorldRenderSystem.cpp systems/WorldRenderSystem.h systems/EntityRenderSystem.cpp systems/EntityRenderSystem.h systems/MonsterSystem.cpp systems/MonsterSystem.h messages/PlayerAttackedMessage.h systems/PlayerSystem.cpp systems/PlayerSystem.h components/Player_c.cpp components/Player_c.h systems/InputSystem.cpp systems/InputSystem.h)
+set(SOURCE_FILES main.cpp components/Position_c.cpp components/Position_c.h components/Renderable_c.cpp components/Renderable_c.h utility/navigator_helper.cpp utility/navigator_helper.h Simulation.cpp Simulation.h World.cpp World.h rng.cpp rng.h components/Brain_c.cpp components/Brain_c.h components/Neuron_c.cpp components/Neuron_c.h settings.h systems/MonsterSensorSystem.cpp systems/MonsterSensorSystem.h components/Monster_c.cpp components/Monster_c.h systems/WorldRenderSystem.cpp systems/WorldRenderSystem.h systems/EntityRenderSystem.cpp systems/EntityRenderSystem.h systems/MonsterSystem.cpp systems/MonsterSystem.h messages/PlayerAttackedMessage.h systems/PlayerSystem.cpp systems/PlayerSystem.h components/Player_c.cpp components/Player_c.h systems/InputSystem.cpp systems/InputSystem.h systems/SoundSystem.cpp systems/SoundSystem.h systems/HeatSystem.cpp systems/HeatSystem.h components/HeatSource_c.cpp components/HeatSource_c.h components/SoundSource_c.cpp components/SoundSource_c.h utility/ShadowCaster.cpp utility/ShadowCaster.h)
 add_executable(DungeonCrawlerBots ${SOURCE_FILES} ${RLTK})
 target_link_libraries(DungeonCrawlerBots ${SFML_LIBRARIES})
 

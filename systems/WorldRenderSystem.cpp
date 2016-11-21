@@ -24,28 +24,34 @@ void WorldRenderSystem::update(const double duration_ms) {
     for (int x = 0; x < world->getWidth(); ++x) {
         for (int y = 0; y < world->getHeight(); ++y) {
             switch (Simulation::getInstance()->getRenderMode()) {
-                case Vision::MonsterSound:
+                case Vision::Sound:
                     switch (world->getTileAt(x, y)) {
                         case 1:
                             term(1)->set_char(world->at(x, y), vchar{' ', GREY, BLACK});
                             break;
                         default:
-                            term(1)->set_char(world->at(x, y), vchar{' ', BLACK, lerp(BLACK, MidnightBlue,
-                                                                                      Simulation::getInstance()->getWorld()->getSoundAt(
-                                                                                              x, y) /
-                                                                                      Settings::BasicSoundRange)});
+                            float value = 0;
+                            int sound = Simulation::getInstance()->getWorld()->getSoundAt(x, y);
+                            if (sound > 0) {
+                                value = 1.0f * Simulation::getInstance()->getWorld()->getSoundAt(x, y) /
+                                        Settings::BasicSoundRange;
+                            }
+                            term(1)->set_char(world->at(x, y), vchar{' ', BLACK, lerp(BLACK, Blue, value)});
                     }
                     break;
-                case Vision::PlayerSound:
+                case Vision::Heat:
                     switch (world->getTileAt(x, y)) {
                         case 1:
-                            term(1)->set_char(world->at(x, y), vchar{' ', GREY, BLACK});
+                            term(1)->set_char(world->at(x, y), vchar{' ', GREY, DarkBlue});
                             break;
                         default:
-                            term(1)->set_char(world->at(x, y), vchar{' ', BLACK, lerp(DarkBlue, RED,
-                                                                                      Simulation::getInstance()->getWorld()->getHeatAt(
-                                                                                              x, y) /
-                                                                                      Settings::BasicHeatRange)});
+                            float value = 0;
+                            int heat = Simulation::getInstance()->getWorld()->getHeatAt(x, y);
+                            if (heat > 0) {
+                                value = 1.0f * Simulation::getInstance()->getWorld()->getHeatAt(x, y) /
+                                        Settings::BasicHeatRange;
+                            }
+                            term(1)->set_char(world->at(x, y), vchar{' ', BLACK, lerp(DarkBlue, RED, value)});
                     }
                     break;
                 default:

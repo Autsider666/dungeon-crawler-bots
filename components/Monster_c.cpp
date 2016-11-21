@@ -6,10 +6,9 @@
 #include "../rng.h"
 #include "../settings.h"
 
-Monster_c::Monster_c() : health(1.0), age(0), generation(0) {
+Monster_c::Monster_c() : health(1.0), age(0), generation(0), inactivity(0) {
     clock1 = rng::getRandomFloatBetween(5, 100);
     clock2 = rng::getRandomFloatBetween(5, 100);
-    speed = 0;
 }
 
 Monster_c Monster_c::reproduce() {

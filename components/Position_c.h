@@ -12,9 +12,9 @@
 struct Position_c {
     Position_c() { }
 
-    Position_c(const float X, const float Y) : x(X), y(Y) { }
+    Position_c(const int X, const int Y) : x(X), y(Y) { }
 
-    float x, y;
+    int x, y;
 
     bool operator==(const Position_c &other) const {
         return (x == other.x && y == other.y);

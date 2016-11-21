@@ -16,7 +16,9 @@ struct Monster_c {
 
     int generation;
 
-    float clock1, clock2, speed;
+    int inactivity;
+
+    float clock1, clock2;
 
     std::vector<std::string> mutations;
 

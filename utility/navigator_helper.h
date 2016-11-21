@@ -80,7 +80,7 @@ struct navigator_helper {
 
     static int get_y(const Position_c &loc) { return static_cast<int>(loc.y); }
 
-    static Position_c get_xy(const float &x, const float &y) { return Position_c{x, y}; }
+    static Position_c get_xy(const int &x, const int &y) { return Position_c{x, y}; }
 
     static bool is_walkable(const Position_c &loc) {
         return Simulation::getInstance()->getWorld()->isReachable(static_cast<int>(loc.x), static_cast<int>(loc.y));

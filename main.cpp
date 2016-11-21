@@ -9,6 +9,9 @@
 #include "systems/MonsterSystem.h"
 #include "systems/MonsterSensorSystem.h"
 #include "systems/InputSystem.h"
+#include "systems/SoundSystem.h"
+#include "systems/HeatSystem.h"
+#include "settings.h"
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -20,8 +23,20 @@ void tick(double duration_ms) {
 //    term(0)->box(GREY, BLACK, true);
     term(0)->clear(vchar{' ', WHITE, DARKEST_GREEN});
     term(0)->box(DARKEST_GREEN, BLACK);
-//    term(0)->print(1, 1, "Agents: " + std::to_string(amountBots), LIGHT_GREEN, DARKEST_GREEN);
-//
+    std::string mode;
+    switch (Simulation::getInstance()->getRenderMode()) {
+        case Vision::Heat:
+            mode = "Infrared";
+            break;
+        case Vision::Sound:
+            mode = "Echolocation";
+            break;
+        default:
+            mode = "Default";
+            break;
+    }
+    term(0)->print(1, 1, mode + " mode", LIGHT_GREEN, DARKEST_GREEN);
+
 //    auto targetPos = entity(Simulation::getInstance()->getTargetId())->component<Position_c>();
 //
 //    term(0)->print(1, 2, "Target: " + std::to_string((int) round(targetPos->x)) + "/" +
@@ -67,7 +82,7 @@ int main() {
     World *world = new World();
     Simulation::getInstance()->setWorld(world);
 
-    init(config_advanced("assets/fonts",1024,768,"SkynetRL"));
+    init(config_advanced("assets/fonts", 1024, 768, "SkynetRL"));
 
     gui->add_layer(0, 864, 0, 160, 768, "8x16", resize_log);
     gui->add_layer(1, 0, 0, 1024 - 160, 768, "16x16", resize_main);
@@ -75,6 +90,8 @@ int main() {
 
     get_window()->setVerticalSyncEnabled(false);
 
+    add_system<HeatSystem>();
+    add_system<SoundSystem>();
     add_system<MonsterSensorSystem>();
     add_system<PlayerSystem>();
     add_system<MonsterSystem>();
@@ -83,7 +100,13 @@ int main() {
     add_system<InputSystem>();
 
     ecs_configure();
-    run(tick);
+    try {
+        run(tick);
+    } catch (std::exception &e) {
+        std::cout << "Exception encountered: " << e.what() << std::endl;
+        int x = 4;
+        x = 2;
+    }
 
     return 0;
 }
